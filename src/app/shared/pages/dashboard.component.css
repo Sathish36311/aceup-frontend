@@ -64,7 +64,7 @@ p {
 
 .btn-primary {
     background-color: var(--primary-color);
-    color: #fff;
+    color: #8d2525;
 }
 
 .btn-primary:hover {
