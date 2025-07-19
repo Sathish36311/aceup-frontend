@@ -1,0 +1,54 @@
+<main class="login-container">
+    <section class="login-box" [class.shake]="loginFailed">
+        <div class="close-button">
+            <i class="fas fa-times" (click)="closeLogin()"></i>
+        </div>
+        <h2>Login</h2>
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <input id="email" type="email" [(ngModel)]="email"
+                        name="email"
+                        required #emailRef="ngModel" />
+
+                    <div class="error"
+                        *ngIf="emailRef.dirty || emailRef.touched">
+                        <small *ngIf="emailRef.errors?.['required']">Email is
+                            required.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input
+                        [type]="showPassword ? 'text' : 'password'"
+                        id="password"
+                        [(ngModel)]="password"
+                        name="password"
+                        required #passwordRef="ngModel" />
+                    <button type="button" class="toggle-password"
+                        (click)="togglePassword()">
+                        {{ showPassword ? 'Hide' : 'Show' }}
+                    </button>
+                    <div class="error"
+                        *ngIf="passwordRef.dirty || passwordRef.touched">
+                        <small *ngIf="passwordRef.errors?.['required']">Password
+                            is required.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-footer">
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            <div class="button-group">
+                <button type="submit"
+                    class="btn btn-primary"
+                    [disabled]="!loginForm.valid">
+                    Login
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
