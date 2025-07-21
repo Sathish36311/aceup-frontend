@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy, EventEmitter, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { TokenRefreshService } from '../../../core/auth/token-refresh.service';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +12,9 @@ import { AuthService } from '../../../core/auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-
+export class LoginComponent {
   email: string = '';
   password: string = '';
-  error: string = '';
 
   loginFailed: boolean = false;
   showPassword: boolean = false;
@@ -25,17 +24,14 @@ export class LoginComponent implements OnInit {
   constructor() { }
 
   authService = inject(AuthService)
+  tokenRefreshService = inject(TokenRefreshService)
   router = inject(Router)
 
-
-
-  ngOnInit(): void {
-
-  }
 
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
+        this.tokenRefreshService.startWatching();
         this.router.navigate(['/auth/register']);
       },
       error: (err) => {
@@ -43,17 +39,6 @@ export class LoginComponent implements OnInit {
       }
     })
   }
-
-  // ngOnInit(): void {
-  //   // Prevent background scroll
-  //   document.body.style.overflow = 'hidden';
-  // }
-
-  // ngOnDestroy(): void {
-  //   // Restore scroll
-  //   document.body.style.overflow = '';
-  // }
-
 
 
   togglePassword() {

@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, { email, password }, { withCredentials: true }).pipe(
       tap((response: AuthResponse) => {
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('username', response.username);
@@ -24,7 +24,6 @@ export class AuthService {
     );
   }
 
-
   getToken(): string | null {
     return localStorage.getItem('accessToken');
   }
@@ -32,8 +31,25 @@ export class AuthService {
   getUserInfo(): { username: string; mail: string; role: string } {
     return {
       username: localStorage.getItem('username') ?? '',
-      mail: localStorage.getItem('mail') ?? '',
+      mail: localStorage.getItem('email') ?? '',
       role: localStorage.getItem('role') ?? ''
     };
   }
+
+  removeToken(): void {
+    localStorage.removeItem('accessToken');
+  }
+
+  getTokenExpiry(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000;
+    } catch {
+      return null;
+    }
+  }
+
 }
