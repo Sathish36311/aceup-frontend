@@ -31,8 +31,8 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        this.tokenRefreshService.startWatching();
-        this.router.navigate(['/auth/register']);
+        this.tokenRefreshService.startWatching();  
+        this.close.emit(); 
       },
       error: (err) => {
         this.triggerShake();

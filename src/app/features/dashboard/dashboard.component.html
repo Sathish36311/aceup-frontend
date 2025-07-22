@@ -8,7 +8,12 @@
       <li><a href="#">Community</a></li>
     </ul>
     <div class="buttons-container">
-      <button class="btn" (click)="showLogin = true">Login</button>
+      <ng-container *ngIf="!isLoggedIn else showProfile">
+        <button class="btn" (click)="showLogin = true">Login</button>
+      </ng-container>
+      <ng-template #showProfile>
+        <app-profile-avatar></app-profile-avatar>
+      </ng-template>    
     </div>
   </nav>
 

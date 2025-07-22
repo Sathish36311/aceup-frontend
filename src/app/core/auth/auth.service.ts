@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 
 @Injectable({
@@ -10,6 +10,9 @@ import { AuthResponse } from '../models/auth-response.model';
 export class AuthService {
 
   private readonly baseUrl = environment.apiUrl + '/api/auth';
+
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasValidToken());
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +23,16 @@ export class AuthService {
         localStorage.setItem('username', response.username);
         localStorage.setItem('email', response.email);
         localStorage.setItem('role', response.role);
+        this.isLoggedInSubject.next(true);
+      })
+    );
+  }
+
+  logout() {
+    return this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        this.clearLocalStorage();
+        this.isLoggedInSubject.next(false);
       })
     );
   }
@@ -38,6 +51,7 @@ export class AuthService {
 
   removeToken(): void {
     localStorage.removeItem('accessToken');
+    this.isLoggedInSubject.next(false);
   }
 
   getTokenExpiry(): number | null {
@@ -50,6 +64,16 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  clearLocalStorage() {
+    localStorage.clear();
+    this.isLoggedInSubject.next(false);
+  }
+
+  private hasValidToken(): boolean {
+    const expiry = this.getTokenExpiry();
+    return expiry ? Date.now() < expiry : false;
   }
 
 }

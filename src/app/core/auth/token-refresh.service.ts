@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class TokenRefreshService {
   private refreshBuffer = 60 * 1000;
 
   private authService = inject(AuthService);
+  private router = inject(Router)
   private ngZone = inject(NgZone)
   private http = inject(HttpClient)
 
@@ -62,6 +64,7 @@ export class TokenRefreshService {
             this.scheduleRefresh();
           },
           error: (err) => {
+            this.router.navigate(['/dashboard'])
             console.error('Refresh token failed', err);
           }
         });
