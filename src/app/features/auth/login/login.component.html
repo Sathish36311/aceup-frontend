@@ -1,7 +1,7 @@
 <main class="login-container">
     <section class="login-box" [class.shake]="loginFailed">
         <div class="close-button">
-            <i class="fas fa-times" (click)="closeLogin()"></i>
+            <i class="fas fa-times" (click)="closeLoginForm()"></i>
         </div>
         <h2>Login</h2>
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">

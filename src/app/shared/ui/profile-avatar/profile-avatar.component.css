@@ -1,33 +1,69 @@
-.avatar-container {
+.profile-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* spacing between avatar and arrow */
   cursor: pointer;
+  user-select: none;
+  outline: none;
 }
 
-.avatar-img {
-  width: 32px;
-  height: 32px;
+.avatar-circle {
+  background-color: #ff5722;
+  color: white;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
 
-.dropdown-menu {
+.avatar-circle:hover {
+  background-color: #e64a19;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: white; /* Make sure this is visible on your header background */
+  transition: transform 0.3s ease;
+}
+
+/* Optional: rotate arrow when open */
+.profile-wrapper:focus-within .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown {
   position: absolute;
+  top: 50px;
   right: 0;
-  top: 36px;
-  background: white;
-  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99;
+  min-width: 150px;
+}
+
+.dropdown ul {
   list-style: none;
-  padding: 0;
   margin: 0;
-  width: 120px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-  z-index: 999;
+  padding: 8px 0;
 }
 
-.dropdown-menu li {
-  padding: 8px 12px;
+.dropdown li {
+  padding: 10px 16px;
+  font-size: 14px;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease-in-out;
+  color: #333;
 }
 
-.dropdown-menu li:hover {
-  background-color: #f0f0f0;
+.dropdown li:hover {
+  background-color: #f6f6f6;
 }

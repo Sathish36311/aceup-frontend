@@ -1,7 +1,10 @@
 <header class="page-header">
   <!-- Navigation -->
   <nav class="header-nav">
-    <a href="#" class="logo">ACEUP</a>
+    <a href="#" class="logo">
+      <img src="/icon/volley_icon.png" alt="ACEUP Logo" class="logo-image" />
+    </a>
+
     <ul class="options">
       <li><a href="#">Explore</a></li>
       <li><a href="#">Matches</a></li>
@@ -13,7 +16,7 @@
       </ng-container>
       <ng-template #showProfile>
         <app-profile-avatar></app-profile-avatar>
-      </ng-template>    
+      </ng-template>
     </div>
   </nav>
 
@@ -21,7 +24,7 @@
   <div class="hero-content">
     <h1>Level Up Your Game</h1>
     <p>Connect. Compete. Conquer. Start your journey with ACEUP today!</p>
-    <a href="#" class="btn">Get Started</a>
+    <button class="btn" (click)="showRegister = true">Get Started</button>
   </div>
 
   <!-- Background video -->
@@ -32,4 +35,7 @@
 
 
 <!-- ✅ Login overlay -->
-<app-login *ngIf="showLogin" (close)="showLogin = false"></app-login>
+<app-login *ngIf="showLogin" (closeLogin)="showLogin = false"></app-login>
+
+<!-- Register Overlay-->
+ <app-register *ngIf="showRegister" (closeRegister)="showRegister = false"></app-register>

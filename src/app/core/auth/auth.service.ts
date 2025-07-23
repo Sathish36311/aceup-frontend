@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
+import { RegisterRequest } from '../models/register-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,19 @@ export class AuthService {
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) { }
+
+  register(data: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, data, { withCredentials: true }).pipe(
+      tap((response: AuthResponse) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('email', response.email);
+        localStorage.setItem('role', response.role);
+        this.isLoggedInSubject.next(true);
+      })
+    );
+  }
+
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, { email, password }, { withCredentials: true }).pipe(
@@ -33,6 +47,9 @@ export class AuthService {
       tap(() => {
         this.clearLocalStorage();
         this.isLoggedInSubject.next(false);
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }

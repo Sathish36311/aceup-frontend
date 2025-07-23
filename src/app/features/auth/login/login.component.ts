@@ -19,7 +19,7 @@ export class LoginComponent {
   loginFailed: boolean = false;
   showPassword: boolean = false;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() closeLogin = new EventEmitter<void>();
 
   constructor() { }
 
@@ -32,7 +32,7 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.tokenRefreshService.startWatching();  
-        this.close.emit(); 
+        this.closeLogin.emit(); 
       },
       error: (err) => {
         this.triggerShake();
@@ -53,8 +53,8 @@ export class LoginComponent {
     }, 400);
   }
 
-  closeLogin() {
-    this.close.emit();
+  closeLoginForm() {
+    this.closeLogin.emit();
   }
 
 }

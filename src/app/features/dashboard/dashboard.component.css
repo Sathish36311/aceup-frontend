@@ -38,13 +38,19 @@
     color: #ff4c29;
 }
 
+.logo-image {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
 .options {
     display: flex;
     gap: 2rem;
 }
 
 .options li a {
-    color: #ffffff;
+    color: #180e0e;
     font-weight: 500;
     transition: color 0.3s ease;
 }

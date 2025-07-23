@@ -1,8 +1,10 @@
-<div class="avatar-container" (click)="toggleMenu()">
-  <img src="/icon/sample-profile.png" class="avatar-img" alt="avatar">
-  <ul *ngIf="showMenu" class="dropdown-menu">
-    <li (click)="goToProfile()">Profile</li>
-    <li (click)="goToSettings()">Settings</li>
-    <li (click)="logout()">Logout</li>
-  </ul>
+<div class="profile-wrapper" (click)="toggleMenu()" tabindex="0" (blur)="closeMenu()">
+  <div class="avatar-circle">{{ usernameInitials }}</div>
+  <div class="dropdown" *ngIf="menuOpen">
+    <ul>
+      <li (click)="goToProfile()">Profile</li>
+      <li (click)="goToSettings()">Settings</li>
+      <li (click)="logout()">Logout</li>
+    </ul>
+  </div>
 </div>

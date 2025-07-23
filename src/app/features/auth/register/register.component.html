@@ -1,1 +1,71 @@
+<main class="login-container">
+    <section class="login-box" [class.shake]="registerFailed">
+        <div class="close-button">
+            <i class="fas fa-times" (click)="closeRegisterForm()"></i>
+        </div>
+        <h2>Register</h2>
+        <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <div class="input-wrapper">
+                    <input id="name" type="text" [(ngModel)]="name" name="name" required #nameRef="ngModel" />
+                    <div class="error" *ngIf="nameRef.dirty || nameRef.touched">
+                        <small *ngIf="nameRef.errors?.['required']">Name is required.</small>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <input id="email" type="email" [(ngModel)]="email" name="email" required #emailRef="ngModel" />
+                    <div class="error" *ngIf="emailRef.dirty || emailRef.touched">
+                        <small *ngIf="emailRef.errors?.['required']">Email is required.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input [type]="showPassword ? 'text' : 'password'" id="password" [(ngModel)]="password"
+                        name="password" required #passwordRef="ngModel" />
+                    <button type="button" class="toggle-password" (click)="togglePassword()">
+                        {{ showPassword ? 'Hide' : 'Show' }}
+                    </button>
+                    <div class="error" *ngIf="passwordRef.dirty || passwordRef.touched">
+                        <small *ngIf="passwordRef.errors?.['required']">Password is required.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role -->
+            <div class="form-group">
+                <label for="role">Role</label>
+                <div class="input-wrapper">
+                    <select id="role" [(ngModel)]="role" name="role" required #roleRef="ngModel">
+                        <option value="" disabled>Select Role</option>
+                        <option *ngFor="let r of roles" [value]="r">
+                            {{ r.valueOf() }}
+                        </option>
+                    </select>
+
+                    <div class="error" *ngIf="roleRef.invalid && (roleRef.dirty || roleRef.touched)">
+                        <small *ngIf="roleRef.errors?.['required']">Role is required.</small>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Submit -->
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary" [disabled]="!registerForm.valid">
+                    Register
+                </button>
+            </div>
+        </form>
+    </section>
+</main>

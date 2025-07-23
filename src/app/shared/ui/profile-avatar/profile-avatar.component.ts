@@ -12,30 +12,48 @@ import { AuthService } from '../../../core/auth/auth.service';
   standalone: true
 })
 export class ProfileAvatarComponent {
-  showMenu = false;
+  menuOpen = false;
+  usernameInitials = '';
 
   constructor(private router: Router) { }
 
   private authService = inject(AuthService)
 
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
+  ngOnInit(): void {
+    const username = this.authService.getUserInfo()['username']
+    this.usernameInitials = this.getInitials(username);
   }
 
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        console.log("Logged out");
-      }
-    });
-    // this.router.navigate(['/dashboard']);
+  getInitials(name: string): string {
+    if (!name) return '';
+    const parts = name.trim().split(' ').filter(part => part.length > 0);
+    let initials = '';
+    if (parts.length === 1) {
+      initials = parts[0].substring(0, 2);
+    } else {
+      initials = parts[0][0] + parts[1][0];
+    }
+    return initials.toUpperCase();
   }
 
-  goToProfile() {
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    setTimeout(() => (this.menuOpen = false), 150);
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe();
+  }
+
+  goToProfile(): void {
     this.router.navigate(['/profile']);
   }
 
-  goToSettings() {
+  goToSettings(): void {
     this.router.navigate(['/settings']);
   }
 }
