@@ -40,16 +40,14 @@ export class RegisterComponent {
       role: this.role
     };
 
-    this.authService.register(registerRequest).subscribe({
-      next: (res) => {
-        console.log('Registration successful:', res);
-        // Optionally auto-login or redirect
-      },
-      error: (err) => {
-        console.error('Registration failed:', err);
-        this.registerFailed = true;
-      }
-    });
+    // this.authService.register(registerRequest).subscribe({
+    //   next: () => {
+    //     this.closeRegister.emit();
+    //   },
+    //   error: (err) => {
+    //     this.registerFailed = true;
+    //   }
+    // });
   }
 }
 

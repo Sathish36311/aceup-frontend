@@ -17,13 +17,13 @@ export class DashboardComponent {
   showRegister: boolean = false;
   isLoggedIn: boolean = false;
 
-  private authService = inject(AuthService)
+  authService = inject(AuthService)
 
 
   ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(status => {
-      this.isLoggedIn = status;
-    });
+    // this.authService.isLoggedIn$.subscribe(status => {
+    //   this.isLoggedIn = status;
+    // });
   }
 
 }

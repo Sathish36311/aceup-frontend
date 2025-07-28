@@ -11,7 +11,7 @@
       <li><a href="#">Community</a></li>
     </ul>
     <div class="buttons-container">
-      <ng-container *ngIf="!isLoggedIn else showProfile">
+      <ng-container *ngIf="!(authService.accessToken$ | async) else showProfile">
         <button class="btn" (click)="showLogin = true">Login</button>
       </ng-container>
       <ng-template #showProfile>
@@ -38,4 +38,4 @@
 <app-login *ngIf="showLogin" (closeLogin)="showLogin = false"></app-login>
 
 <!-- Register Overlay-->
- <app-register *ngIf="showRegister" (closeRegister)="showRegister = false"></app-register>
+<app-register *ngIf="showRegister" (closeRegister)="showRegister = false"></app-register>

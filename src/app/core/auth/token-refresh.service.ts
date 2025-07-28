@@ -1,79 +1,117 @@
-import { inject, Injectable, NgZone } from '@angular/core';
-import { AuthService } from './auth.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { tap } from 'rxjs';
-import { Router } from '@angular/router';
+// import { inject, Injectable, NgZone } from '@angular/core';
+// import { AuthService } from './auth.service';
+// import { HttpClient } from '@angular/common/http';
+// import { environment } from '../../../environments/environment';
+// import { tap } from 'rxjs';
+// import { Router } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TokenRefreshService {
+// @Injectable({ providedIn: 'root' })
+// export class TokenRefreshService {
+//   private readonly baseUrl = environment.apiUrl + '/api/auth';
+//   private refreshTimer: any;
+//   private refreshBuffer = 15 * 1000; // 15 seconds before expiry
+//   private activityTimeout: any;
+//   private readonly activityEvents = ['mousemove', 'keydown', 'click'];
 
-  private readonly baseUrl = environment.apiUrl + '/api/auth';
+//   constructor(
+//     private http: HttpClient,
+//     private router: Router,
+//     private authService: AuthService,
+//     private ngZone: NgZone
+//   ) {
+//     this.initActivityListeners();
+//   }
 
-  private refreshTimer: any;
-  private refreshBuffer = 60 * 1000;
+//   startWatching(): void {
+//     this.scheduleRefresh();
+//   }
 
-  private authService = inject(AuthService);
-  private router = inject(Router)
-  private ngZone = inject(NgZone)
-  private http = inject(HttpClient)
+//   stopWatching(): void {
+//     if (this.refreshTimer) clearTimeout(this.refreshTimer);
+//     if (this.activityTimeout) clearTimeout(this.activityTimeout);
+//   }
 
+//   private initActivityListeners(): void {
+//     this.activityEvents.forEach(event => {
+//       window.addEventListener(event, () => {
+//         localStorage.setItem('userActive', 'true');
+//       });
+//     });
 
-  constructor() { }
+//     document.addEventListener('visibilitychange', () => {
+//       if (document.visibilityState === 'visible') {
+//         localStorage.setItem('userActive', 'true');
+//       }
+//     });
+//   }
 
-  startWatching() {
-    this.scheduleRefresh();
-  }
+//   private scheduleRefresh(): void {
+//     this.stopWatching();
 
-  stopWatching() {
-    if (this.refreshTimer) {
-      clearTimeout(this.refreshTimer)
-    }
-  }
+//     const expiry = this.authService.getTokenExpiry();
+//     if (!expiry) return;
 
-  private scheduleRefresh() {
-    this.stopWatching()
+//     const delay = expiry - this.refreshBuffer - Date.now();
 
-    const expiry = this.authService.getTokenExpiry();
+//     console.log(`[TokenRefreshService] Scheduling refresh in ${delay / 1000}s`);
 
-    if (!expiry) return;
+//     if (delay <= 0) {
+//       this.evaluateAndRefresh();
+//     } else {
+//       this.ngZone.runOutsideAngular(() => {
+//         this.refreshTimer = setTimeout(() => this.evaluateAndRefresh(), delay);
+//       });
+//     }
+//   }
 
-    const now = Date.now();
-    const refreshTime = expiry - this.refreshBuffer;
-    const delay = refreshTime - now;
+//   private evaluateAndRefresh(): void {
+//     const isUserActive = localStorage.getItem('userActive') === 'true';
 
-    if (delay <= 0) {
-      this.refreshTokenIfActive();
-    } else {
-      this.ngZone.runOutsideAngular(() => {
-        this.refreshTimer = setTimeout(() => {
-          this.refreshTokenIfActive();
-        }, delay);
-      });
-    }
-  }
+//     console.log(`[TokenRefreshService] User Active: ${isUserActive}`);
 
-  private refreshTokenIfActive() {
-    if (document.hasFocus()) {
-      this.http.post(`${this.baseUrl}/refresh-token`, {}, { withCredentials: true })
-        .subscribe({
-          next: (res: any) => {
-            localStorage.setItem('accessToken', res.body.accessToken);
-            this.scheduleRefresh();
-          },
-          error: (err) => {
-            this.router.navigate(['/dashboard'])
-            console.error('Refresh token failed', err);
-          }
-        });
+//     if (isUserActive) {
+//       this.refreshAccessToken();
+//     } else {
+//       this.logoutUser();
+//     }
+//   }
 
-    } else {
-      window.addEventListener('focus', () => {
-        this.refreshTokenIfActive();
-      }, { once: true });
-    }
-  }
+//   private refreshAccessToken(): void {
+//     console.log('[TokenRefreshService] Refreshing access token...');
 
-}
+//     this.http.post(`${this.baseUrl}/refresh-token`, {}, { withCredentials: true })
+//       .subscribe({
+//         next: (res: any) => {
+//           const newAccessToken = res.body?.accessToken;
+//           if (newAccessToken) {
+//             localStorage.setItem('accessToken', newAccessToken)
+//             localStorage.setItem('userActive', 'false')
+//             this.scheduleRefresh();
+//             console.log('[TokenRefreshService] Access token refreshed.');
+//           } else {
+//             this.logoutUser();
+//           }
+//         },
+//         error: (err) => {
+//           console.error('[TokenRefreshService] Refresh failed.', err);
+//           this.logoutUser();
+//         }
+//       });
+//   }
+
+//   private logoutUser(): void {
+//     console.warn('[TokenRefreshService] Logging out due to inactivity or token failure.');
+
+//     this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true })
+//       .subscribe({
+//         next: () => {
+//           this.authService.clearLocalStorage();
+//           this.router.navigate(['/login']);
+//         },
+//         error: () => {
+//           this.authService.clearLocalStorage();
+//           this.router.navigate(['/login']);
+//         }
+//       });
+//   }
+// }

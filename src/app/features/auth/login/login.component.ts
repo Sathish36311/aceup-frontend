@@ -3,7 +3,6 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output, inject } from '@ang
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { TokenRefreshService } from '../../../core/auth/token-refresh.service';
 
 @Component({
   selector: 'app-login',
@@ -13,26 +12,24 @@ import { TokenRefreshService } from '../../../core/auth/token-refresh.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  constructor() { }
+
+  authService = inject(AuthService)
+  router = inject(Router)
+
+  @Output() closeLogin = new EventEmitter<void>();
+
+
   email: string = '';
   password: string = '';
 
   loginFailed: boolean = false;
   showPassword: boolean = false;
 
-  @Output() closeLogin = new EventEmitter<void>();
-
-  constructor() { }
-
-  authService = inject(AuthService)
-  tokenRefreshService = inject(TokenRefreshService)
-  router = inject(Router)
-
-
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        this.tokenRefreshService.startWatching();  
-        this.closeLogin.emit(); 
+        this.closeLogin.emit();
       },
       error: (err) => {
         this.triggerShake();
